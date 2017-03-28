@@ -1,0 +1,58 @@
+version: "2"
+
+services:
+  redis:
+    restart: always
+    image: redis:latest
+    ports:
+      - "6379"
+  mongo:
+    restart: always
+    image: mongo:latest
+    ports:
+      - "27017"
+  api-node:
+    build:
+      context: ./NGallery-API
+      dockerfile: Dockerfile
+    restart: always
+    links:
+      - redis
+      - mongo
+    ports:
+      - "8080"
+    volumes:
+      - /Users/WXQ/Desktop/NGallery/NGallery-API:/src
+      - /Users/WXQ/Desktop/NGallery/.npm:/root/.npm
+
+  account-node:
+    build:
+      context: ./NGallery-AccountsCenter
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080"
+    volumes:
+      - /Users/WXQ/Desktop/NGallery/NGallery-AccountsCenter:/src
+      - /Users/WXQ/Desktop/NGallery/.npm:/root/.npm
+
+  client-node:
+    build:
+      context: ./NGallery-Client
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8080"
+    volumes:
+      - /Users/WXQ/Desktop/NGallery/NGallery-Client:/src
+      - /Users/WXQ/Desktop/NGallery/.npm:/root/.npm
+  
+  nginx:
+    build: ./Nginx
+    restart: always
+    links:
+      - api-node
+      - account-node
+      - client-node
+    ports:
+      - "80:80"
