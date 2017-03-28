@@ -1,0 +1,9 @@
+[submodule "NGallery-Client"]
+	path = NGallery-Client
+	url = git@github.com:thundernet8/NGallery-Client.git
+[submodule "NGallery-AccountsCenter"]
+	path = NGallery-AccountsCenter
+	url = git@github.com:thundernet8/NGallery-AccountsCenter.git
+[submodule "NGallery-API"]
+	path = NGallery-API
+	url = git@github.com:thundernet8/NGallery-API.git
