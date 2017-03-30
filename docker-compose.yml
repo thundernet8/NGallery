@@ -6,14 +6,20 @@ services:
     image: redis:latest
     ports:
       - "6379"
+    volumes:
+      - /Users/WXQ/Desktop/NGallery/Volumes/redis/data:/data
+    networks:
+      - front-tier
   mongo:
     restart: always
     image: mongo:latest
     ports:
       - "27017"
+    networks:
+      - front-tier
     volumes:
-      - /Users/WXQ/Desktop/NGallery/mongodb/db:/data/db
-      - /Users/WXQ/Desktop/NGallery/mongodb/configdb:/data/configdb
+      - /Users/WXQ/Desktop/NGallery/Volumes/mongodb/db:/data/db
+      - /Users/WXQ/Desktop/NGallery/Volumes/mongodb/configdb:/data/configdb
   api-node:
     build:
       context: ./NGallery-API
@@ -24,6 +30,8 @@ services:
       - mongo
     ports:
       - "8080"
+    networks:
+      - front-tier
     volumes:
       - /Users/WXQ/Desktop/NGallery/NGallery-API:/src
       - /Users/WXQ/Desktop/NGallery/.npm:/root/.npm
@@ -35,6 +43,8 @@ services:
     restart: always
     ports:
       - "8080"
+    networks:
+      - front-tier
     links:
       - api-node
     volumes:
@@ -48,6 +58,8 @@ services:
     restart: always
     ports:
       - "8080"
+    networks:
+      - front-tier
     links:
       - api-node
     volumes:
@@ -57,9 +69,17 @@ services:
   nginx:
     build: ./Nginx
     restart: always
+    networks:
+      - front-tier
     links:
       - api-node
       - account-node
       - client-node
+    volumes:
+      - /Users/WXQ/Desktop/NGallery:/home
     ports:
       - "80:80"
+
+networks:
+  front-tier:
+    driver: bridge
