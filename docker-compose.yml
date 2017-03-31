@@ -13,6 +13,7 @@ services:
   mongo:
     restart: always
     image: mongo:latest
+    user: mongodb
     ports:
       - "27017"
     networks:
